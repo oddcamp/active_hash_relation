@@ -95,7 +95,10 @@ User.where(email: 'test@user.com').joins(:microposts).merge(micropost_filter)
 ```
 
 ### Scopes
-Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope. Only scopes that don't accept arguments are supported. The rest could also be supported but it wouldn't make much sense..
+Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope. Only scopes that don't accept arguments are supported. The rest could also be supported but it wouldn't make much sense.. If you want to filter based on a scope in a model, the scope names should go under `scopes` sub-hash. For instance the following:
+* `{ scopes: { planned: true } }`
+
+will run the `.planned` scope on the resource.
 
 ### Whitelisting
 If you don't want to allow a column/association/scope just remove it from the params hash.
