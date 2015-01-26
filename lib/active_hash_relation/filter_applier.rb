@@ -1,6 +1,8 @@
 module ActiveHashRelation
   class FilterApplier
-    include Filters
+    include ColumnFilters
+    include AssociationFilters
+    include ScopeFilters
 
     def initialize(resource, params, include_associations: false, model: nil)
       @resource = resource
@@ -37,8 +39,11 @@ module ActiveHashRelation
         end
       end
 
-      return self.send(:filter_associations, @resource, @params)
-      #return resource
+
+      @resource = filter_scopes(@resource, @params[:scopes]) if @params.include?(:scopes)
+      @resource = filter_associations(@resource, @params)
+
+      return @resource
     end
 
   end

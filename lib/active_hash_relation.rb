@@ -1,5 +1,8 @@
+require "active_record/scope_names"
 require "active_hash_relation/version"
-require "active_hash_relation/filters"
+require "active_hash_relation/column_filters"
+require "active_hash_relation/scope_filters"
+require "active_hash_relation/association_filters"
 require "active_hash_relation/filter_applier"
 
 module ActiveHashRelation
