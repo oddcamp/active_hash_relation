@@ -53,8 +53,9 @@ end
 For each param, `apply_filters` method will search in the model's (derived from the first param, or explicitly defined as the last param) all the record's column names and associations. (filtering based on scopes are not working at the moment but will be supported soon). For each column, if there is such a param, it will apply the filter based on the column type. The following column types are supported:
 
 #### Primary
-You can apply a filter in a primary key using an array like:
-* `{primary_key: [1,3,4,5,6,7]}`
+You can apply a filter a column which is a primary key by value or using an array like:
+* `{primary_key_column: 5}`
+* `{primary_key)column: [1,3,4,5,6,7]}`
 
 #### Integer, Float, Decimal, Date, Time or Datetime/Timestamp
 You can apply an equality filter:
