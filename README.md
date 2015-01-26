@@ -95,10 +95,10 @@ User.where(email: 'test@user.com').joins(:microposts).merge(micropost_filter)
 ```
 
 ### Scopes
-Not supported yet but it will be in the future. Unfortunately, Rails doesn't hold the scopes internally, so we will either have to monkeypatch scope class method or add support for adding custom model class methods in the filters.
+Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope. Only scopes that don't accept arguments are supported. The rest could also be supported but it wouldn't make much sense..
 
 ### Whitelisting
-It would be nice to add support for whitelisting associations/column names from the filtering. Probably you won't want to expose the whole DB as it is. Currently, you can only disable associations passing false to `include_associations` param.
+If you don't want to allow a column/association/scope just remove it from the params hash.
 
 ## Contributing
 
