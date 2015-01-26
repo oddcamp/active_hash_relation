@@ -1,10 +1,12 @@
 require "active_rest_relation/version"
 
 module ActiveRestRelation
-  def apply_filters(resource, params)
-    model_class = resource.class.to_s.split('::').first.constantize
-    table_name = model_class.table_name
-    model_class.columns.each do |c|
+  def apply_filters(resource, params, include_associations: false, model: nil)
+    unless model
+      model = model_class_name(resource)
+    end
+    table_name = model.table_name
+    model.columns.each do |c|
       unless params[c.name.to_s].nil?
         resource = filter_primary(resource, c.name, params[c.name]) and next if c.primary
         case c.type
@@ -22,10 +24,36 @@ module ActiveRestRelation
       end
     end
 
-    return resource
+    return self.send(:filter_associations, resource)
+    #return resource
   end
 
   private
+
+  def filter_associations(resource, model: nil)
+    unless model
+      model = model_class_name(resource)
+    end
+
+    model.reflect_on_all_associations.map(&:name).each do |association|
+      if params[association]
+        association_name = association.to_s.titleize.split.join
+        association_filters = self.apply_filters(
+          association_name.singularize.constantize.all,
+          params[association],
+          include_associations: true
+        )
+        resource = resource.joins(association).merge(association_filters)
+      end
+    end
+
+    return resource
+  end
+
+  def model_class_name(resource)
+    resource.class.to_s.split('::').first.constantize
+  end
+
 
   def filter_primary(resource, column, param)
     resource = resource.where(id: param)
