@@ -29,7 +29,8 @@ Or install it yourself as:
 
     $ gem install active_json_relation
 ## How to use
-The gem exposes only one method: `apply_filters(resource, json_params, include_associations: true, model: nil)`. Resource should be an ActiveRecord::Relation.
+The gem exposes only one method: `apply_filters(resource, json_params, include_associations: true, model: nil)`. `resource` is expected to be an ActiveRecord::Relation.
+That way, you can add your custom filters before passing the `Relation` to `ActiveJsonRelation`.
 
 In order to use it you have to include ActiveJsonRelation module in your class. For instance in a Rails API controller you would do:
 
