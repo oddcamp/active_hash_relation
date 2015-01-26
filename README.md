@@ -56,7 +56,7 @@ For each param, `apply_filters` method will search in the model's (derived from 
 You can apply a filter in a primary key using an array like:
 * `{primary_key: [1,3,4,5,6,7]}`
 
-#### Integer, Date, Time or Datetime/Timestamp
+#### Integer, Float, Decimal, Date, Time or Datetime/Timestamp
 You can apply an equality filter:
 * `{example_column: 500}`
 or using a hash as a value you get more options:
@@ -74,12 +74,6 @@ The same api is for Date, Time or Datetime/Timestamp.
 The boolean value is converted from string using ActiveRecord's `TRUE_VALUES` through `value_to_boolean` method.. So for a value to be true must be one of the following: `[true, 1, '1', 't', 'T', 'true', 'TRUE']`. Anything else is false. 
 * `{example_column: true}`
 * `{example_column: 0}`
-
-#### Float
-Support is coming, but API will be the same as Integer.
-
-#### Decimal
-Support is coming, but API will be the same as Integer.
 
 #### String or Text
 You can apply an incensitive matching filter (currently working only for Postgres):

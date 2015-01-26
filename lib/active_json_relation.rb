@@ -6,7 +6,7 @@ module ActiveJsonRelation
   def apply_filters(resource, params, include_associations: false, model: nil)
     FilterApplier.new(
       resource,
-      HashWithIndifferentAccess.new(params),
+      params,
       include_associations: include_associations,
       model: model
     ).apply_filters
