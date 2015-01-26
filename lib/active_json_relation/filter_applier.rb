@@ -1,4 +1,4 @@
-module ActiveJsonRelation
+module ActiveHashRelation
   class FilterApplier
     include Filters
 

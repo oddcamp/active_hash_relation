@@ -1,4 +1,4 @@
-module ActiveJsonRelation::Filters
+module ActiveHashRelation::Filters
   def filter_associations(resource, params, model: nil)
     unless model
       model = model_class_name(resource)
@@ -7,7 +7,7 @@ module ActiveJsonRelation::Filters
     model.reflect_on_all_associations.map(&:name).each do |association|
       if params[association]
         association_name = association.to_s.titleize.split.join
-        association_filters = ActiveJsonRelation::FilterApplier.new(
+        association_filters = ActiveHashRelation::FilterApplier.new(
           association_name.singularize.constantize.all,
           params[association],
           include_associations: true
