@@ -1,6 +1,6 @@
-require "active_rest_relation/version"
+require "active_json_relation/version"
 
-module ActiveRestRelation
+module ActiveJsonRelation
   def apply_filters(resource, params, include_associations: false, model: nil)
     unless model
       model = model_class_name(resource)

@@ -1,4 +1,4 @@
-# ActiveRestRelation
+# ActiveJsonRelation
 
 ## Introduction
 Simple gem that allows you to manipulate ActiveRecord::Relation using JSON. For instance:
@@ -19,7 +19,7 @@ and the list could go on.. Basically your whole db is exposed there. It's perfec
 
 Add this line to your application's Gemfile:
 
-    gem 'active_rest_relation'
+    gem 'active_json_relation'
 
 And then execute:
 
@@ -27,15 +27,15 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install active_rest_relation
+    $ gem install active_json_relation
 ## How to use
 The gem exposes only one method: `apply_filters(resource, json_params, include_associations: true, model: nil)`. Resource should be an ActiveRecord::Relation.
 
-In order to use it you have to include ActiveRestRelation module in your class. For instance in a Rails API controller you would do:
+In order to use it you have to include ActiveJsonRelation module in your class. For instance in a Rails API controller you would do:
 
 ```ruby
 class Api::V1::ResourceController < Api::V1::BaseController
-  include ActiveRestRelation
+  include ActiveJsonRelation
 
   def index
     resources = apply_filters(Resource.all, params)
@@ -91,7 +91,7 @@ The above filter will search all records that include `test` in the `example_col
 If the association is a `belongs_to` or `has_one`, then the json attribute name must be in singular. If the association is `has_many` the attribute must be in plural reflecting the association type. When you have in your json filters for an association, the sub-json is passed in the association's model. For instance, let's say a user has many microposts and the following filter is applied (could be through an HTTP GET request on controller's index method):
 * `{email: test@user.com, microposts: {created_at { leq: 12-9-2014} }`
 
-Internally, ActiveRestRelation, extracts `{created_at { leq: 12-9-2014} }` and runs it on Micropost model. So the final query will look like:
+Internally, ActiveJsonRelation, extracts `{created_at { leq: 12-9-2014} }` and runs it on Micropost model. So the final query will look like:
 
 ```ruby
 micropost_filter = Micropost.all.where("CREATED_AT =< ?", '12-9-2014'.to_datetime)
@@ -106,7 +106,7 @@ It would be nice to add support for whitelisting associations/column names from 
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/active_rest_relation/fork )
+1. Fork it ( https://github.com/[my-github-username]/active_json_relation/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

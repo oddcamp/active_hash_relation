@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'active_rest_relation/version'
+require 'active_json_relation/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "active_rest_relation"
-  spec.version       = ActiveRestRelation::VERSION
+  spec.name          = "active_json_relation"
+  spec.version       = ActiveJsonRelation::VERSION
   spec.authors       = ["Filippos Vasilakis"]
   spec.email         = ["vasilakisfil@gmail.com"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
