@@ -4,7 +4,10 @@ module ActiveHashRelation
     include AssociationFilters
     include ScopeFilters
 
-    def initialize(resource, params, include_associations: false, model: nil)
+    attr_reader :configuration
+
+    def initialize(resource, params, include_associations: true, model: nil)
+      @configuration = Module.nesting.last.configuration
       @resource = resource
       @params = HashWithIndifferentAccess.new(params)
       @include_associations = include_associations
@@ -46,5 +49,8 @@ module ActiveHashRelation
       return @resource
     end
 
+    def filter_class(resource_name)
+      "#{configuration.filter_class_prefix}#{resource_name.pluralize}#{configuration.filter_class_suffix}".constantize
+    end
   end
 end

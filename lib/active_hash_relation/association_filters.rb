@@ -7,11 +7,19 @@ module ActiveHashRelation::AssociationFilters
     model.reflect_on_all_associations.map(&:name).each do |association|
       if params[association]
         association_name = association.to_s.titleize.split.join
-        association_filters = ActiveHashRelation::FilterApplier.new(
-          association_name.singularize.constantize.all,
-          params[association],
-          include_associations: true
-        ).apply_filters
+        if self.configuration.has_filter_classes
+          puts self.filter_class(association_name)
+          association_filters = self.filter_class(association_name).new(
+            association_name.singularize.constantize.all,
+            params[association]
+          ).apply_filters
+        else
+          association_filters = ActiveHashRelation::FilterApplier.new(
+            association_name.singularize.constantize.all,
+            params[association],
+            include_associations: true
+          ).apply_filters
+        end
         resource = resource.joins(association).merge(association_filters)
       end
     end
