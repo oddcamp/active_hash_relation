@@ -18,10 +18,10 @@ and the list could go on.. Basically your whole db is exposed\* there. It's perf
 It should be noted that `apply_filters` calls `ActiveHashRelation::FilterApplier` class
 underneath with the same params.
 
-*Actually nothing is exposed, but a user could retrieve resources based
+_\*Actually nothing is exposed, but a user could retrieve resources based
 on unknown attributes (attributes not returned from the API) by brute forcing
 which might or might not be a security issue. If you don't like that check
-[whitelisting](https://github.com/kollegorna/active_hash_relation#whitelisting)*
+[whitelisting](https://github.com/kollegorna/active_hash_relation#whitelisting)._
 
 ## Installation
 
