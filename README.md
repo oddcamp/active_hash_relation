@@ -15,14 +15,13 @@ apply_filters(resource, {updated_at: { geq: "2014-11-2 14:25:04"}, unit: {id: 9,
 ```
 and the list could go on.. Basically your whole db is exposed\* there. It's perfect for filtering a collection of resources on APIs.
 
-It should be noted that apply\_filters calls ActiveHashRelation::FilterApplier class
+It should be noted that `apply_filters` calls `ActiveHashRelation::FilterApplier` class
 underneath with the same params.
 
-*Actually nothing is exposed, but a used could retrieve resources based
-on unknown attributes, attributes not returned from the API, by brute forcing
+*Actually nothing is exposed, but a user could retrieve resources based
+on unknown attributes (attributes not returned from the API) by brute forcing
 which might or might not be a security issue. If you don't like that check
-[whitelisting](https://github.com/kollegorna/active_hash_relation#whitelisting)
-and [filter classes](https://github.com/kollegorna/active_hash_relation#filter_classes)*
+[whitelisting](https://github.com/kollegorna/active_hash_relation#whitelisting)*
 
 ## Installation
 
@@ -112,10 +111,10 @@ will run the `.planned` scope on the resource.
 ### Whitelisting
 If you don't want to allow a column/association/scope just remove it from the params hash.
 
-## Filter Classes
+#### Filter Classes
 Sometimes, especially on larger projects, you have specific classes that handle
 the input params outside the controllers. You can configure the gem to look for
-those classes and call apply\_filters which will apply the necessary filters when
+those classes and call `apply_filters` which will apply the necessary filters when
 iterating over associations.
 
 In an initializer:
