@@ -23,7 +23,18 @@ module ActiveHashRelation
       @model.columns.each do |c|
         next if @params[c.name.to_s].nil?
 
-        @resource = filter_primary(@resource, c.name, @params[c.name]) and next if c.primary
+        if c.respond_to?(:primary)
+          if c.primary
+            @resource = filter_primary(@resource, c.name, @params[c.name])
+            next
+          end
+        else #rails 4.2
+          if @model.primary_key == c.name
+            @resource = filter_primary(@resource, c.name, @params[c.name])
+            next
+          end
+        end
+
         case c.type
         when :integer
           @resource = filter_integer(@resource, c.name, table_name, @params[c.name])
