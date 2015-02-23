@@ -55,7 +55,7 @@ module ActiveHashRelation
 
 
       @resource = filter_scopes(@resource, @params[:scopes]) if @params.include?(:scopes)
-      @resource = filter_associations(@resource, @params)
+      @resource = filter_associations(@resource, @params) if @include_associations
 
       return @resource
     end
