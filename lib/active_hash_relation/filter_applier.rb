@@ -3,6 +3,8 @@ module ActiveHashRelation
     include ColumnFilters
     include AssociationFilters
     include ScopeFilters
+    include SortFilters
+    include LimitFilters
 
     attr_reader :configuration
 
@@ -56,6 +58,8 @@ module ActiveHashRelation
 
       @resource = filter_scopes(@resource, @params[:scopes]) if @params.include?(:scopes)
       @resource = filter_associations(@resource, @params) if @include_associations
+      @resource = apply_limit(@resource, @params[:limit]) if @params.include?(:limit)
+      @resource = apply_sort(@resource, @params[:sort], @model) if @params.include?(:sort)
 
       return @resource
     end

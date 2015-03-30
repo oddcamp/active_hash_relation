@@ -90,6 +90,19 @@ You can apply an incensitive matching filter (currently working only for Postgre
 
 The above filter will search all records that include `test` in the `example_column` field. A better would be nice here, for instance, setting the search sensitive or insensitive, start or end with a string etch
 
+### Limit
+A limit param defines the number of returned resources. For instance:
+* `{limit: 10}`
+
+However I would strongly advice you to use a pagination gem like Kaminari, and use `page` and `per_page` params.
+
+
+### Sorting
+You can apply sorting using the `property` and `order` attributes. For instance:
+* `{property: 'created_at', order: 'desc'}`
+
+If there is no column named after the property value, sorting is skipped.
+
 
 ### Associations
 If the association is a `belongs_to` or `has_one`, then the hash key name must be in singular. If the association is `has_many` the attribute must be in plural reflecting the association type. When you have, in your hash, filters for an association, the sub-hash is passed in the association's model. For instance, let's say a user has many microposts and the following filter is applied (could be through an HTTP GET request on controller's index method):
