@@ -63,13 +63,13 @@ module ActiveHashRelation::ColumnFilters
     if param[:leq]
       resource = resource.where("#{table_name}.#{column} <= ?", param[:leq])
     elsif param[:le]
-      resource = resource.where("#{table_name}.#{column} < ?", param[:leq])
+      resource = resource.where("#{table_name}.#{column} < ?", param[:le])
     end
 
     if param[:geq]
       resource = resource.where("#{table_name}.#{column} >= ?", param[:geq])
     elsif param[:ge]
-      resource = resource.where("#{table_name}.#{column} > ?", param[:geq])
+      resource = resource.where("#{table_name}.#{column} > ?", param[:ge])
     end
 
     return resource
