@@ -63,7 +63,7 @@ For each param, `apply_filters` method will search in the model's (derived from 
 #### Primary
 You can apply a filter a column which is a primary key by value or using an array like:
 * `{primary_key_column: 5}`
-* `{primary_key)column: [1,3,4,5,6,7]}`
+* `{primary_key_column: [1,3,4,5,6,7]}`
 
 #### Integer, Float, Decimal, Date, Time or Datetime/Timestamp
 You can apply an equality filter:
