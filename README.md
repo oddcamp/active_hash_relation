@@ -21,7 +21,7 @@ underneath with the same params.
 _\*Actually nothing is exposed, but a user could retrieve resources based
 on unknown attributes (attributes not returned from the API) by brute forcing
 which might or might not be a security issue. If you don't like that check
-[whitelisting](n#whitelisting)._
+[whitelisting](#whitelisting)._
 
 *New*! You can now do [__aggregation queries__](#aggregation-queries).
 
