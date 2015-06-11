@@ -1,5 +1,6 @@
 module ActiveHashRelation
   class FilterApplier
+    include Helpers
     include ColumnFilters
     include AssociationFilters
     include ScopeFilters
