@@ -1,8 +1,4 @@
 module ActiveHashRelation::ColumnFilters
-  def model_class_name(resource)
-    resource.class.to_s.split('::').first.constantize
-  end
-
   def filter_primary(resource, column, param)
     resource = resource.where(id: param)
   end
