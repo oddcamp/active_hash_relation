@@ -149,7 +149,7 @@ called to apply the filters in resource association.
 Sometimes we need to ask the database queries that act on the collection but don't want back an array of elements but a value instead! Now you can do that on an ActiveRecord::Relation by simply calling the aggregations method inside the controller:
 
 ```ruby
-apply_filters(resource, {
+aggregations(resource, {
   aggregate: {
     integer_column: { avg: true, max: true, min: true, sum: true },
     float_column: {avg: true, max: true, min: true },
