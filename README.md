@@ -165,7 +165,7 @@ and you will get a hash (HashWithIndifferentAccess) back that holds all your agg
  "datetime_at"=>{"max"=>2015-06-11 20:59:14 UTC, "min"=>2015-06-11 20:59:12 UTC}}
 ```
 
-These attributes usually go to the "meta" section of your serializer. In that way it's easy to parse them in the front-end (for ember check [here](http://guides.emberjs.com/v1.10.0/models/handling-metadata/)). Please note that you should apply the aggregations __after__ you apply the filters, if there any.
+These attributes usually go to the "meta" section of your serializer. In that way it's easy to parse them in the front-end (for ember check [here](http://guides.emberjs.com/v1.10.0/models/handling-metadata/)). Please note that you should apply the aggregations __after__ you apply the filters (if there any) but __before__ you apply pagination!
 
 
 

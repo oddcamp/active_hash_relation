@@ -46,7 +46,7 @@ module ActiveHashRelation
       meta_attributes = HashWithIndifferentAccess.new
 
       available_aggr.each do |k, v|
-        if asked_aggr[k] == true
+        if asked_aggr[k]
           meta_attributes[k] = resource.send(v,column)
           meta_attributes[k] = meta_attributes[k].to_f if meta_attributes[k].is_a? BigDecimal
         end
