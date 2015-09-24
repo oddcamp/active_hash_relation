@@ -56,15 +56,15 @@ module ActiveHashRelation::ColumnFilters
   private
 
   def apply_leq_geq_le_ge_filters(resource, table_name, column, param)
-    if param[:leq]
+    if !param[:leq].blank?
       resource = resource.where("#{table_name}.#{column} <= ?", param[:leq])
-    elsif param[:le]
+    elsif !param[:le].blank?
       resource = resource.where("#{table_name}.#{column} < ?", param[:le])
     end
 
-    if param[:geq]
+    if !param[:geq].blank?
       resource = resource.where("#{table_name}.#{column} >= ?", param[:geq])
-    elsif param[:ge]
+    elsif !param[:ge].blank?
       resource = resource.where("#{table_name}.#{column} > ?", param[:ge])
     end
 
