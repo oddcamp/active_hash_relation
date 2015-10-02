@@ -48,7 +48,7 @@ module ActiveHashRelation::ColumnFilters
   end
 
   def filter_boolean(resource, column, param)
-    b_param = ActiveRecord::ConnectionAdapters::Column.value_to_boolean(param)
+    b_param = ActiveRecord::Type::Boolean.new.type_cast_from_database(param)
 
     resource = resource.where(column => b_param)
   end
