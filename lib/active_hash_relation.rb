@@ -40,6 +40,7 @@ module ActiveHashRelation
   end
 
   class Configuration
-    attr_accessor :has_filter_classes, :filter_class_prefix, :filter_class_suffix
+    attr_accessor :has_filter_classes, :filter_class_prefix, :filter_class_suffix,
+      :use_unscoped
   end
 end

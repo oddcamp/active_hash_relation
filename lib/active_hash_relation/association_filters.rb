@@ -8,17 +8,31 @@ module ActiveHashRelation::AssociationFilters
       if params[association]
         association_name = association.to_s.titleize.split.join
         if self.configuration.has_filter_classes
-          puts self.filter_class(association_name)
-          association_filters = self.filter_class(association_name).new(
-            association_name.singularize.constantize.all,
-            params[association]
-          ).apply_filters
+          if self.configuration.use_unscoped
+            association_filters = self.filter_class(association_name).new(
+              association_name.singularize.constantize.unscoped.all,
+              params[association]
+            ).apply_filters
+          else
+            association_filters = self.filter_class(association_name).new(
+              association_name.singularize.constantize.all,
+              params[association]
+            ).apply_filters
+          end
         else
-          association_filters = ActiveHashRelation::FilterApplier.new(
-            association_name.singularize.constantize.all,
-            params[association],
-            include_associations: true
-          ).apply_filters
+          if self.configuration.use_unscoped
+            association_filters = ActiveHashRelation::FilterApplier.new(
+              association_name.singularize.constantize.unscoped.all,
+              params[association],
+              include_associations: true
+            ).apply_filters
+          else
+            association_filters = ActiveHashRelation::FilterApplier.new(
+              association_name.singularize.constantize.all,
+              params[association],
+              include_associations: true
+            ).apply_filters
+          end
         end
         resource = resource.joins(association).merge(association_filters)
       end
