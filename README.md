@@ -123,6 +123,22 @@ Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class me
 
 will run the `.planned` scope on the resource.
 
+### Unscoped assotiations
+If you have a default scope in your models and you have a good reason to keep that, `active_hash_relation` provides an option to override it when filtering associations:
+
+```ruby
+#config/initializers/active_hash_relation.rb
+ActiveHashRelation.configure do |config|
+  config.use_unscoped = true
+end
+```
+
+You still have to provide the main model `active_hash_relation` runs as unscoped though.
+```ruby
+apply_filters(Video.unscoped.all, {limit: 30, user: {country_code: 'SE'}})
+#"SELECT  \"videos\".* FROM \"videos\" INNER JOIN \"users\" ON \"users\".\"id\" = \"videos\".\"user_id\" WHERE (users.country_code ILIKE '%GR%') LIMIT 30"
+```
+
 ### Whitelisting
 If you don't want to allow a column/association/scope just remove it from the params hash.
 
