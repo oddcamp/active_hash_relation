@@ -20,7 +20,12 @@ module ActiveHashRelation::ColumnFilters
   end
 
   def filter_string(resource, column, table_name, param)
-    resource = resource.where("#{table_name}.#{column} ILIKE ?", "%#{param}%")
+    if param.is_a? Array
+      n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","")
+      return resource = resource.where("#{table_name}.#{column} IN (#{n_param})")
+    else
+      return resource = resource.where("#{table_name}.#{column} ILIKE ?", "%#{param}%")
+    end
   end
 
   def filter_text(resource, column, param)

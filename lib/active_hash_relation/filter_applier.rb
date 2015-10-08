@@ -24,7 +24,8 @@ module ActiveHashRelation
       end
       table_name = @model.table_name
       @model.columns.each do |c|
-        next if @params[c.name.to_s].blank?
+        next if @params[c.name.to_s].nil?
+        next if @params[c.name.to_s].is_a?(String) && @params[c.name.to_s].blank?
 
         if c.respond_to?(:primary)
           if c.primary
