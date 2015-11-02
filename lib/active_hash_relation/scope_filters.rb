@@ -1,5 +1,5 @@
 module ActiveHashRelation::ScopeFilters
-  def filter_scopes(resource, params, model: nil)
+  def filter_scopes(resource, params, model = nil)
     unless model
       model = model_class_name(resource)
     end

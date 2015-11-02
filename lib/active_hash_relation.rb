@@ -35,8 +35,8 @@ module ActiveHashRelation
     ).apply_filters
   end
 
-  def aggregations(resource, params)
-    Aggregation.new(resource, params).apply
+  def aggregations(resource, params, model: nil)
+    Aggregation.new(resource, params, model: model).apply
   end
 
   class Configuration

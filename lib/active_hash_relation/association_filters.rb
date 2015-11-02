@@ -1,5 +1,5 @@
 module ActiveHashRelation::AssociationFilters
-  def filter_associations(resource, params, model: nil)
+  def filter_associations(resource, params, model = nil)
     unless model
       model = model_class_name(resource)
     end
