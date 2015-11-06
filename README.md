@@ -101,7 +101,7 @@ However I would strongly advice you to use a pagination gem like Kaminari, and u
 
 ### Sorting
 You can apply sorting using the `property` and `order` attributes. For instance:
-* `{property: 'created_at', order: 'desc'}`
+* `{sort: {property: 'created_at', order: 'desc'}}`
 
 If there is no column named after the property value, sorting is skipped.
 
