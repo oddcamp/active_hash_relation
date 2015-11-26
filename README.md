@@ -69,7 +69,12 @@ You can apply a filter a column which is a primary key by value or using an arra
 
 #### Integer, Float, Decimal, Date, Time or Datetime/Timestamp
 You can apply an equality filter:
+
 * `{example_column: 500}`
+
+or using an array
+* `{example_column: [500, 40]}`
+
 or using a hash as a value you get more options:
 * `{example_column: {le: 500}}`
 * `{example_column: {leq: 500}}`
@@ -79,7 +84,7 @@ or using a hash as a value you get more options:
 Of course you can provide a compination of those like:
 * `{example_column: {geq: 500, le: 1000}}`
 
-The same api is for Date, Time or Datetime/Timestamp.
+The same api is for a Float, Decimal, Date, Time or Datetime/Timestamp.
 
 #### Boolean
 The boolean value is converted from string using ActiveRecord's `TRUE_VALUES` through `value_to_boolean` method.. So for a value to be true must be one of the following: `[true, 1, '1', 't', 'T', 'true', 'TRUE']`. Anything else is false. 
@@ -88,9 +93,16 @@ The boolean value is converted from string using ActiveRecord's `TRUE_VALUES` th
 
 #### String or Text
 You can apply an incensitive matching filter (currently working only for Postgres):
-* `{example_column: test}`
+* `{example_column: 'test'}` `#runs EXAMPLE_COLUMN = 'test'`
+* `{example_column: ['test', 'another test']}` `#runs EXAMPLE_COLUMN = 'test' OR EXAMPLE_COLUMN = 'another test'`
 
-The above filter will search all records that include `test` in the `example_column` field. A better would be nice here, for instance, setting the search sensitive or insensitive, start or end with a string etch
+or using a hash as a value you get more options:
+* `{example_column: {eq: 'exact value'}}` `#runs: EXAMPLE_COLUMN = 'test'`
+* `{example_column: {starts_with: 'exac'}}` `#runs: EXAMPLE_COLUMN LIKE 'test%'`
+* `{example_column: {ends_with: 'alue'}}` `#runs: EXAMPLE_COLUMN LIKE '%test'`
+* `{example_column: {like: 'ct_va}}` `#runs: EXAMPLE_COLUMN LIKE '%test%'`
+
+**Please note that ILIKE and especially LIKE are quite slow if you have millions of records in the db even with an index.**
 
 ### Limit
 A limit param defines the number of returned resources. For instance:
