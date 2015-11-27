@@ -4,10 +4,13 @@ module ActiveHashRelation::ColumnFilters
   end
 
   def filter_integer(resource, column, table_name, param)
-    if !param.is_a? Hash
-      return resource.where(column => param)
-    else
+    if param.is_a? Array
+      n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
+      return resource.where("#{table_name}.#{column} IN (#{n_param})")
+    elsif param.is_a? Hash
       return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+    else
+      return resource.where("#{table_name}.#{column} = ?", param)
     end
   end
 
@@ -21,10 +24,12 @@ module ActiveHashRelation::ColumnFilters
 
   def filter_string(resource, column, table_name, param)
     if param.is_a? Array
-      n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","")
-      return resource = resource.where("#{table_name}.#{column} IN (#{n_param})")
+      n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
+      return resource.where("#{table_name}.#{column} IN (#{n_param})")
+    elsif param.is_a? Hash
+      return apply_like_filters(resource, table_name, column, param)
     else
-      return resource = resource.where("#{table_name}.#{column} ILIKE ?", "%#{param}%")
+      return resource.where("#{table_name}.#{column} = ?", param)
     end
   end
 
@@ -33,20 +38,26 @@ module ActiveHashRelation::ColumnFilters
   end
 
   def filter_date(resource, column, table_name, param)
-    if !param.is_a? Hash
-      resource = resource.where(column => param[column])
-    else
+    if param.is_a? Array
+      n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
+      return resource.where("#{table_name}.#{column} IN (#{n_param})")
+    elsif param.is_a? Hash
       return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+    else
+      resource = resource.where(column => param)
     end
 
     return resource
   end
 
   def filter_datetime(resource, column, table_name, param)
-    if !param.is_a? Hash
-      resource = resource.where(column => param[column])
-    else
+    if param.is_a? Array
+      n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
+      return resource = resource.where("#{table_name}.#{column} IN (#{n_param})")
+    elsif param.is_a? Hash
       return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+    else
+      resource = resource.where(column => param)
     end
 
     return resource
@@ -71,6 +82,29 @@ module ActiveHashRelation::ColumnFilters
       resource = resource.where("#{table_name}.#{column} >= ?", param[:geq])
     elsif !param[:ge].blank?
       resource = resource.where("#{table_name}.#{column} > ?", param[:ge])
+    end
+
+    return resource
+  end
+
+  def apply_like_filters(resource, table_name, column, param)
+    like_method = "LIKE"
+    like_method = "ILIKE" if param[:with_ilike]
+
+    if !param[:starts_with].blank?
+      resource = resource.where("#{table_name}.#{column} #{like_method} ?", "#{param[:starts_with]}%")
+    end
+
+    if !param[:ends_with].blank?
+      resource = resource.where("#{table_name}.#{column} #{like_method} ?", "%#{param[:ends_with]}")
+    end
+
+    if !param[:like].blank?
+      resource = resource.where("#{table_name}.#{column} #{like_method} ?", "%#{param[:like]}%")
+    end
+
+    if !param[:eq].blank?
+      resource = resource.where("#{table_name}.#{column} = ?", param[:eq])
     end
 
     return resource
