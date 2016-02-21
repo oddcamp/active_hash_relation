@@ -12,6 +12,9 @@ module ActiveHashRelation
 
       unless @model
         @model = model_class_name(@resource)
+        if @model.nil? || engine_name == @model.to_s
+          @model = model_class_name(@resource, true)
+        end
       end
     end
 

@@ -2,6 +2,9 @@ module ActiveHashRelation::AssociationFilters
   def filter_associations(resource, params, model = nil)
     unless model
       model = model_class_name(resource)
+      if model.nil? || engine_name == model.to_s
+        model = model_class_name(resource, true)
+      end
     end
 
     model.reflect_on_all_associations.map(&:name).each do |association|
