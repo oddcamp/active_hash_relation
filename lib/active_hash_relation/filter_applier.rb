@@ -21,6 +21,9 @@ module ActiveHashRelation
     def apply_filters
       unless @model
         @model = model_class_name(@resource)
+        if @model.nil? || engine_name == @model.to_s
+          @model = model_class_name(@resource, true)
+        end
       end
       table_name = @model.table_name
       @model.columns.each do |c|
