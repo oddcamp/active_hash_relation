@@ -129,6 +129,11 @@ micropost_filter = Micropost.all.where("CREATED_AT =< ?", '12-9-2014'.to_datetim
 User.where(email: 'test@user.com').joins(:microposts).merge(micropost_filter)
 ```
 
+### NULL Filter
+You can apply null filter for generate query like this `"users.name IS NULL"` or `"users.name IS NOT NULL"` with this following code:
+`{ name: { null: true } }` for is null filter and `{ name: { null: false } }` for not null filter.
+
+this can be used also for relations tables, so you can write like this `{ books: {title: {null: false }} }`
 
 ### Scopes
 Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope. Only scopes that don't accept arguments are supported. The rest could also be supported but it wouldn't make much sense.. If you want to filter based on a scope in a model, the scope names should go under `scopes` sub-hash. For instance the following:
