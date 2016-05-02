@@ -49,7 +49,7 @@ module ActiveHashRelation
           @resource = filter_float(@resource, c.name, table_name, @params[c.name])
         when :decimal
           @resource = filter_decimal(@resource, c.name, table_name, @params[c.name])
-        when :string
+        when :string, :uuid
           @resource = filter_string(@resource, c.name, table_name, @params[c.name])
         when :date
           @resource = filter_date(@resource, c.name, table_name, @params[c.name])
