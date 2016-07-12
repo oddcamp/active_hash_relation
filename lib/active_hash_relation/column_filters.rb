@@ -8,7 +8,11 @@ module ActiveHashRelation::ColumnFilters
       n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
       return resource.where("#{table_name}.#{column} IN (#{n_param})")
     elsif param.is_a? Hash
-      return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+      if !param[:null].nil?
+        return null_filters(resource, table_name, column, param)
+      else
+        return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+      end
     else
       return resource.where("#{table_name}.#{column} = ?", param)
     end
@@ -27,7 +31,11 @@ module ActiveHashRelation::ColumnFilters
       n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
       return resource.where("#{table_name}.#{column} IN (#{n_param})")
     elsif param.is_a? Hash
-      return apply_like_filters(resource, table_name, column, param)
+      if !param[:null].nil?
+        return null_filters(resource, table_name, column, param)
+      else
+        return apply_like_filters(resource, table_name, column, param)
+      end
     else
       return resource.where("#{table_name}.#{column} = ?", param)
     end
@@ -42,7 +50,11 @@ module ActiveHashRelation::ColumnFilters
       n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
       return resource.where("#{table_name}.#{column} IN (#{n_param})")
     elsif param.is_a? Hash
-      return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+      if !param[:null].nil?
+        return null_filters(resource, table_name, column, param)
+      else
+        return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+      end
     else
       resource = resource.where(column => param)
     end
@@ -55,7 +67,11 @@ module ActiveHashRelation::ColumnFilters
       n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
       return resource = resource.where("#{table_name}.#{column} IN (#{n_param})")
     elsif param.is_a? Hash
-      return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+      if !param[:null].nil?
+        return null_filters(resource, table_name, column, param)
+      else
+        return apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+      end
     else
       resource = resource.where(column => param)
     end
@@ -107,6 +123,18 @@ module ActiveHashRelation::ColumnFilters
       resource = resource.where("#{table_name}.#{column} = ?", param[:eq])
     end
 
+    return resource
+  end
+  
+  def null_filters(resource, table_name, column, param)
+    if param[:null] == true
+      resource = resource.where("#{table_name}.#{column} IS NULL")
+    end
+    
+    if param[:null] == false
+      resource = resource.where("#{table_name}.#{column} IS NOT NULL")
+    end
+    
     return resource
   end
 end
