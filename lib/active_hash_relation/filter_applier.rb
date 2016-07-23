@@ -12,7 +12,11 @@ module ActiveHashRelation
     def initialize(resource, params, include_associations: true, model: nil)
       @configuration = Module.nesting.last.configuration
       @resource = resource
-      @params = HashWithIndifferentAccess.new(params)
+      if params.respond_to?(:to_unsafe_h)
+        @params = HashWithIndifferentAccess.new(params.to_unsafe_h)
+      else
+        @params = HashWithIndifferentAccess.new(params)
+      end
       @include_associations = include_associations
       @model = model
     end
