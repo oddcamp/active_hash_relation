@@ -9,7 +9,7 @@ module ActiveHashRelation
 
     attr_reader :configuration
 
-    def initialize(resource, params, include_associations: true, model: nil)
+    def initialize(resource, params, include_associations: false, model: nil)
       @configuration = Module.nesting.last.configuration
       @resource = resource
       if params.respond_to?(:to_unsafe_h)
@@ -60,7 +60,7 @@ module ActiveHashRelation
         when :datetime, :timestamp
           @resource = filter_datetime(@resource, c.name, table_name, @params[c.name])
         when :boolean
-          @resource = filter_boolean(@resource, c.name, @params[c.name])
+          @resource = filter_boolean(@resource, c.name, table_name, @params[c.name])
         end
       end
 

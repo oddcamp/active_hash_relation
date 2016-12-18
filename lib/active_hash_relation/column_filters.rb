@@ -79,15 +79,25 @@ module ActiveHashRelation::ColumnFilters
     return resource
   end
 
-  def filter_boolean(resource, column, param)
-    b_param = ActiveRecord::Type::Boolean.new.type_cast_from_database(param)
+  def filter_boolean(resource, column, table_name, param)
+    if param.is_a?(Hash) && !param[:null].nil?
+      return null_filters(resource, table_name, column, param)
+    else
+      if ActiveRecord::VERSION::MAJOR >= 5
+        b_param = ActiveRecord::Type::Boolean.new.cast(param)
+      else
+        b_param = ActiveRecord::Type::Boolean.new.type_cast_from_database(param)
+      end
 
-    resource = resource.where(column => b_param)
+      resource = resource.where(column => b_param)
+    end
   end
 
   private
 
   def apply_leq_geq_le_ge_filters(resource, table_name, column, param)
+    return resource.where("#{table_name}.#{column} = ?", param[:eq]) if param[:eq]
+
     if !param[:leq].blank?
       resource = resource.where("#{table_name}.#{column} <= ?", param[:leq])
     elsif !param[:le].blank?

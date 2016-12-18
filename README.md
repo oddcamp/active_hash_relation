@@ -62,11 +62,6 @@ end
 ### Columns
 For each param, `apply_filters` method will search in the model's (derived from the first param, or explicitly defined as the last param) all the record's column names and associations. (filtering based on scopes are not working at the moment but will be supported soon). For each column, if there is such a param, it will apply the filter based on the column type. The following column types are supported:
 
-#### Primary
-You can apply a filter a column which is a primary key by value or using an array like:
-* `{primary_key_column: 5}`
-* `{primary_key_column: [1,3,4,5,6,7]}`
-
 #### Integer, Float, Decimal, Date, Time or Datetime/Timestamp
 You can apply an equality filter:
 
@@ -100,7 +95,13 @@ or using a hash as a value you get more options:
 * `{example_column: {eq: 'exact value'}}` `#runs: EXAMPLE_COLUMN = 'test'`
 * `{example_column: {starts_with: 'exac'}}` `#runs: EXAMPLE_COLUMN LIKE 'test%'`
 * `{example_column: {ends_with: 'alue'}}` `#runs: EXAMPLE_COLUMN LIKE '%test'`
-* `{example_column: {like: 'ct_va}}` `#runs: EXAMPLE_COLUMN LIKE '%test%'`
+* `{example_column: {like: 'ct_va'}}` `#runs: EXAMPLE_COLUMN LIKE '%test%'`
+
+If you want to filter using `ILIKE` you can pass an `with_ilike` param:
+
+* `{example_column: {like: 'ct_va', with_ilike: true}}` `#runs: EXAMPLE_COLUMN ILIKE '%test%'`
+* `{example_column: {like: 'ct_va', with_ilike: true}}` `#runs: EXAMPLE_COLUMN ILIKE '%test%'`
+
 
 **Please note that ILIKE and especially LIKE are quite slow if you have millions of records in the db even with an index.**
 

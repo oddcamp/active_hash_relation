@@ -1,14 +1,14 @@
-require "active_record/scope_names"
-require "active_hash_relation/version"
-require "active_hash_relation/helpers"
-require "active_hash_relation/column_filters"
-require "active_hash_relation/scope_filters"
-require "active_hash_relation/sort_filters"
-require "active_hash_relation/limit_filters"
-require "active_hash_relation/association_filters"
-require "active_hash_relation/filter_applier"
+require_relative "active_record/scope_names"
+require_relative "active_hash_relation/version"
+require_relative "active_hash_relation/helpers"
+require_relative "active_hash_relation/column_filters"
+require_relative "active_hash_relation/scope_filters"
+require_relative "active_hash_relation/sort_filters"
+require_relative "active_hash_relation/limit_filters"
+require_relative "active_hash_relation/association_filters"
+require_relative "active_hash_relation/filter_applier"
 
-require "active_hash_relation/aggregation"
+require_relative "active_hash_relation/aggregation"
 
 module ActiveHashRelation
   class << self

@@ -26,7 +26,7 @@ module ActiveRecord
           end
 
 
-          @scope_names << name if body.arity.eql?(0)
+          @scope_names << name
         end
       end
     end
