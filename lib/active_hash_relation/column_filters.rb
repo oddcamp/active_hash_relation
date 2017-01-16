@@ -127,11 +127,11 @@ module ActiveHashRelation::ColumnFilters
   end
   
   def null_filters(resource, table_name, column, param)
-    if param[:null] == true
+    if param[:null] == true || param[:null] == 'true' || param[:null] == 1 || param[:null] == '1'
       resource = resource.where("#{table_name}.#{column} IS NULL")
     end
     
-    if param[:null] == false
+    if param[:null] == false || param[:null] == 'false' || param[:null] == 0 || param[:null] == '0'
       resource = resource.where("#{table_name}.#{column} IS NOT NULL")
     end
     
