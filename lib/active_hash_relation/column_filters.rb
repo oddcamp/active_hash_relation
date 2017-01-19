@@ -41,8 +41,8 @@ module ActiveHashRelation::ColumnFilters
     end
   end
 
-  def filter_text(resource, column, param)
-    return filter_string(resource, column, param)
+  def filter_text(resource, column, table_name, param)
+    return filter_string(resource, column, table_name, param)
   end
 
   def filter_date(resource, column, table_name, param)
