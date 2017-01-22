@@ -5,6 +5,7 @@ class BasicModels < ActiveRecord::Migration[5.0]
       t.integer  "user_id", null: false
       t.integer  "likes", null: false, default: 0
       t.integer  "reposts", null: false, default: 0
+      t.integer  "status", null: false, default: 0
 
       t.timestamps null: false
 

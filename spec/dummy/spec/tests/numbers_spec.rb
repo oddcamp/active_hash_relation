@@ -128,6 +128,17 @@ describe ActiveHashRelation do
           expect(strip(query)).to eq expected_query.to_s
         end
       end
+
+      it 'rails enum' do
+        hash = {status: 0}
+
+        query = HelperClass.new.apply_filters(Micropost.all, hash).to_sql
+        expected_query = q(
+          "SELECT microposts.* FROM microposts WHERE (microposts.status = 0)"
+        )
+
+        expect(strip(query)).to eq expected_query.to_s
+      end
     end
   end
 end

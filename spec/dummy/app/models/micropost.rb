@@ -7,6 +7,7 @@
 #  user_id    :integer          not null
 #  likes      :integer          default("0"), not null
 #  reposts    :integer          default("0"), not null
+#  status     :integer          default("0"), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
@@ -17,6 +18,8 @@
 
 class Micropost < ApplicationRecord
   belongs_to :user, counter_cache: true
+
+  enum status: [ :draft, :published, :archived ]
 
   scope :created_on, ->(date) {where("date(microposts.created_at) = ?", date.to_date)}
 end
