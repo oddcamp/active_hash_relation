@@ -12,5 +12,16 @@ module ActiveHashRelation
     def engine_name
       Rails::Engine.subclasses[0].to_s.split('::').first
     end
+
+    def find_model(model)
+      return model if model
+
+      model = model_class_name(@resource)
+      if model.nil? || engine_name == model.to_s
+        model = model_class_name(@resource, true)
+      end
+
+      return model
+    end
   end
 end

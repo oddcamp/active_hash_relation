@@ -12,7 +12,7 @@ apply_filters(resource, {updated_at: { geq: "2014-11-2 14:25:04"}, unit: {id: 9}
 ```
 or even filter a resource based on it's associations' associations:
 ```ruby
-apply_filters(resource, {updated_at: { geq: "2014-11-2 14:25:04"}, unit: {id: 9, areas: {id: 22} }})
+apply_filters(resource, {updated_at: { geq: "2014-11-2 14:25:04"}, unit: {id: 9, areas: {or: [{id: 22}, {id: 21}]} }})
 ```
 and the list could go on.. Basically your whole db is exposed\* there. It's perfect for filtering a collection of resources on APIs.
 
@@ -30,7 +30,7 @@ which might or might not be a security issue. If you don't like that check
 
 Add this line to your application's Gemfile:
 
-    gem 'active_hash_relation'
+    gem 'active_hash_relation', '~> 1.2.0
 
 And then execute:
 
@@ -39,8 +39,10 @@ And then execute:
 Or install it yourself as:
 
     $ gem install active_hash_relation
+
 ## How to use
-The gem exposes only one method: `apply_filters(resource, hash_params, include_associations: true, model: nil)`. `resource` is expected to be an ActiveRecord::Relation.
+The gem exposes only one method: `apply_filters(resource, hash_params, include_associations: true, model: nil)`.
+`resource` is expected to be an ActiveRecord::Relation.
 That way, you can add your custom filters before passing the `Relation` to `ActiveHashRelation`.
 
 In order to use it you have to include ActiveHashRelation module in your class. For instance in a Rails API controller you would do:
@@ -78,17 +80,21 @@ end
   ActiveHashRelation.initialize!
 ```
 
-
 ## The API
 ### Columns
-For each param, `apply_filters` method will search in the model's (derived from the first param, or explicitly defined as the last param) all the record's column names and associations. (filtering based on scopes are not working at the moment but will be supported soon). For each column, if there is such a param, it will apply the filter based on the column type. The following column types are supported:
+For each param, `apply_filters` method will search in the model's (derived from the
+first param, or explicitly defined as the last param) all the record's column names
+and associations. (filtering based on scopes are not working at the moment but
+will be supported soon). For each column, if there is such a param, it will
+apply the filter based on the column type. The following column types are supported:
+
 
 #### Integer, Float, Decimal, Date, Time or Datetime/Timestamp
 You can apply an equality filter:
 
 * `{example_column: 500}`
 
-or using an array
+or using an array (`ActiveRecord` translates that internally to an `IN` query)
 * `{example_column: [500, 40]}`
 
 or using a hash as a value you get more options:
@@ -156,6 +162,17 @@ You can apply null filter for generate query like this `"users.name IS NULL"` or
 `{ name: { null: true } }` for is null filter and `{ name: { null: false } }` for not null filter.
 
 this can be used also for relations tables, so you can write like this `{ books: {title: {null: false }} }`
+
+
+### OR Filter
+You can apply an SQL `OR` (for ActiveRecord 5+) using the following syntax:
+`{or: [{name: 'Filippos'}, {name: 'Vasilis'}]}`
+
+It will generate: `WHERE ((users.name = 'Filippos') OR (users.name = 'Vasilis'))`
+
+You can apply an `OR` on associations as well or even nested ones, there isn't much limitation on that.
+I suggest you though to take a look on the [tests](spec/tests/or_filter_spec.rb), cause the syntax gets a bit complex after a while ;)
+
 
 ### Scopes
 **Filtering on scopes is not enabled by default**.
