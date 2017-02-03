@@ -59,6 +59,26 @@ class Api::V1::ResourceController < Api::V1::BaseController
 end
 ```
 
+If you **need to enable filtering on scopes**, you need to specify that explicitly from the initializer. For instance:
+
+```ruby
+ActiveHashRelation.configure do |config|
+  #override default scope when accessing associations
+  config.use_unscoped = true
+  #set true to be able to filter scopes (with params)
+  #please note that unfortunately (:/) rails does not provide any way
+  #to iterate through scopes so it uses a monkey patch.
+  #The monkey patch is as gentle as it can be by aliasing the method, adds some
+  #sugar and calls it,
+  #You need to run `initialize!` to actually include the required files
+  config.filter_active_record_scopes = true
+end
+
+  #requires monkeyparched scopes, optional if you don't enable them
+  ActiveHashRelation.initialize!
+```
+
+
 ## The API
 ### Columns
 For each param, `apply_filters` method will search in the model's (derived from the first param, or explicitly defined as the last param) all the record's column names and associations. (filtering based on scopes are not working at the moment but will be supported soon). For each column, if there is such a param, it will apply the filter based on the column type. The following column types are supported:
@@ -138,10 +158,22 @@ You can apply null filter for generate query like this `"users.name IS NULL"` or
 this can be used also for relations tables, so you can write like this `{ books: {title: {null: false }} }`
 
 ### Scopes
-Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope. Only scopes that don't accept arguments are supported. The rest could also be supported but it wouldn't make much sense.. If you want to filter based on a scope in a model, the scope names should go under `scopes` sub-hash. For instance the following:
+**Filtering on scopes is not enabled by default**.
+
+Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope.
+The monkey patch is as gentle as it can be: it aliases the method, adds some sugar and executes it.
+
+Scopes with arguments are also supported but not tested much. Probably they will work fine unless your arguments expect
+complex objects.
+
+If you want to filter based on a scope in a model, the scope names should go under `scopes` sub-hash. For instance the following:
 * `{ scopes: { planned: true } }`
 
 will run the `.planned` scope on the resource.
+
+* `{scopes: {created_between: [1988, 2018]}}`
+
+will run the `.created_on(1988, 2018)` scope on the resource.
 
 ### Unscoped assotiations
 If you have a default scope in your models and you have a good reason to keep that, `active_hash_relation` provides an option to override it when filtering associations:
