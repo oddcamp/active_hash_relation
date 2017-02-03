@@ -1,4 +1,5 @@
 # ActiveHashRelation
+[ ![Codeship Status for kollegorna/active_hash_relation](https://app.codeship.com/projects/02f08850-cc66-0134-028f-5ad72e690a75/status?branch=master)](https://app.codeship.com/projects/200194)
 
 ## Introduction
 Simple gem that allows you to manipulate ActiveRecord::Relation using JSON. For instance:

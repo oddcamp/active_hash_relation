@@ -64,8 +64,13 @@ module ActiveHashRelation
         end
       end
 
-
-      @resource = filter_scopes(@resource, @params[:scopes], @model) if @params.include?(:scopes)
+      if @params.include?(:scopes)
+        if ActiveHashRelation.configuration.filter_active_record_scopes
+          @resource = filter_scopes(@resource, @params[:scopes], @model)
+        else
+          Rails.logger.warn('Ignoring ActiveRecord scope filters because they are not enabled')
+        end
+      end
       @resource = filter_associations(@resource, @params, @model) if @include_associations
       @resource = apply_limit(@resource, @params[:limit]) if @params.include?(:limit)
       @resource = apply_sort(@resource, @params[:sort], @model) if @params.include?(:sort)
