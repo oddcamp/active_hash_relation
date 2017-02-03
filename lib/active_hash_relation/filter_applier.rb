@@ -18,33 +18,16 @@ module ActiveHashRelation
         @params = HashWithIndifferentAccess.new(params)
       end
       @include_associations = include_associations
-      @model = model
+      @model = find_model(model)
     end
 
-
     def apply_filters
-      unless @model
-        @model = model_class_name(@resource)
-        if @model.nil? || engine_name == @model.to_s
-          @model = model_class_name(@resource, true)
-        end
-      end
+      run_or_filters
+
       table_name = @model.table_name
       @model.columns.each do |c|
         next if @params[c.name.to_s].nil?
         next if @params[c.name.to_s].is_a?(String) && @params[c.name.to_s].blank?
-
-        if c.respond_to?(:primary)
-          if c.primary
-            @resource = filter_primary(@resource, c.name, @params[c.name])
-            next
-          end
-        else #rails 4.2
-          if @model.primary_key == c.name
-            @resource = filter_primary(@resource, c.name, @params[c.name])
-            next
-          end
-        end
 
         case c.type
         when :integer
@@ -80,6 +63,25 @@ module ActiveHashRelation
 
     def filter_class(resource_name)
       "#{configuration.filter_class_prefix}#{resource_name.pluralize}#{configuration.filter_class_suffix}".constantize
+    end
+
+    def run_or_filters
+      if @params[:or].is_a?(Array)
+        if ActiveRecord::VERSION::MAJOR < 5
+          return Rails.logger.warn("OR query is supported on ActiveRecord 5+") 
+        end
+
+        if @params[:or].length >= 2
+          array = @params[:or].map do |or_param|
+            self.class.new(@resource, or_param, include_associations: @include_associations).apply_filters
+          end
+
+          @resource = @resource.merge(array[0])
+          array[1..-1].each{|query| @resource = @resource.or(query)}
+        else
+          Rails.logger.warn("Can't run an OR with 1 element!")
+        end
+      end
     end
   end
 end

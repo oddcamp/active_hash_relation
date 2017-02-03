@@ -43,7 +43,15 @@ module Helpers
   end
 
   def q(*args)
-    args.join(' ')
+    args.each.with_index.inject(''){|memo, (str, index)|
+      if args[index-1] == '('
+        "#{memo}#{str}"
+      elsif str == ')'
+        "#{memo}#{str}"
+      else
+        "#{memo} #{str}"
+      end
+    }.strip
   end
 end
 

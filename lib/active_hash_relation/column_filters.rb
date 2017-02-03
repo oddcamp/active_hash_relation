@@ -1,8 +1,4 @@
 module ActiveHashRelation::ColumnFilters
-  def filter_primary(resource, column, param)
-    resource = resource.where(id: param)
-  end
-
   def filter_integer(resource, column, table_name, param)
     if param.is_a? Array
       n_param = param.to_s.gsub("\"","'").gsub("[","").gsub("]","") #fix this!
