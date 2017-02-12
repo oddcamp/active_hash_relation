@@ -9,7 +9,7 @@ module ActiveHashRelation
 
     attr_reader :configuration
 
-    def initialize(resource, params, include_associations: false, model: nil)
+    def initialize(resource, params, include_associations: false, model: nil, is_not: false)
       @configuration = Module.nesting.last.configuration
       @resource = resource
       if params.respond_to?(:to_unsafe_h)
@@ -19,10 +19,12 @@ module ActiveHashRelation
       end
       @include_associations = include_associations
       @model = find_model(model)
+      is_not ? @is_not = true : @is_not = false
     end
 
     def apply_filters
       run_or_filters
+      run_not_filters
 
       table_name = @model.table_name
       @model.columns.each do |c|
@@ -68,7 +70,7 @@ module ActiveHashRelation
     def run_or_filters
       if @params[:or].is_a?(Array)
         if ActiveRecord::VERSION::MAJOR < 5
-          return Rails.logger.warn("OR query is supported on ActiveRecord 5+") 
+          return Rails.logger.warn("OR query is supported on ActiveRecord 5+")
         end
 
         if @params[:or].length >= 2
@@ -81,6 +83,17 @@ module ActiveHashRelation
         else
           Rails.logger.warn("Can't run an OR with 1 element!")
         end
+      end
+    end
+
+    def run_not_filters
+      if @params[:not].is_a?(Hash) && !@params[:not].blank?
+        @resource = self.class.new(
+          @resource,
+          @params[:not],
+          include_associations: @include_associations,
+          is_not: true
+        ).apply_filters
       end
     end
   end

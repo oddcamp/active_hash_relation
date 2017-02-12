@@ -174,6 +174,19 @@ You can apply an `OR` on associations as well or even nested ones, there isn't m
 I suggest you though to take a look on the [tests](spec/tests/or_filter_spec.rb), cause the syntax gets a bit complex after a while ;)
 
 
+### NOT Filter
+You can apply an SQL `NOT` (for ActiveRecord 4+) using the following syntax:
+`{not: {name: 'Filippos', email: {ends_with: '@gmail.com'}}}`
+
+It will generate: `WHERE (NOT (users.name = 'Filippos')) AND (NOT (users.email LIKE '%@gmail.com'))`
+
+You can apply an `NOT` on associations as well or even nested ones, there isn't much limitation on that.
+I suggest you to also take a look on the [tests](spec/tests/not_filter_spec.rb).
+
+Also I should note that you need to add specific (partial) queries if you don't want
+to have performance issues on tables with millions of rows.
+
+
 ### Scopes
 **Filtering on scopes is not enabled by default**.
 
