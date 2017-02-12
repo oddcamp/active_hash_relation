@@ -12,8 +12,16 @@ module ActiveHashRelation::SortFilters
   end
 
   def apply_hash_sort(resource, params, model = nil)
-    if model.columns.map(&:name).include?(params[:property].to_s)
-      resource = resource.order(params[:property] => (params[:order] || :desc) )
+    if not params[:property].blank?
+      if model.columns.map(&:name).include?(params[:property].to_s)
+        resource = resource.order(params[:property] => (params[:order] || :desc) )
+      end
+    else
+      params.each do |property, order|
+        if model.columns.map(&:name).include?(property.to_s)
+          resource = resource.order(property => (order || :desc) )
+        end
+      end
     end
 
     return resource

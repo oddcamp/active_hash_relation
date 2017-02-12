@@ -140,8 +140,20 @@ However I would strongly advice you to use a pagination gem like Kaminari, and u
 
 
 ### Sorting
+You can apply sorting using the property as the key of the hash and order as the value. For instance:
+* `{sort: {created_at: desc}}`
+
+You can also order by multiple attributes:
+* `{sort: {created_at: desc, microposts_count: :asc}}`
+
+If there is no column named after the property value, sorting is skipped.
+
+#### Deprecated API (will be removed in version 3.0)
 You can apply sorting using the `property` and `order` attributes. For instance:
-* `{sort: {property: 'created_at', order: 'desc'}}`
+* `{sort: {property: :created_at, order: :desc}}`
+
+You can also order by multiple attributes:
+* `{sort: [{property: :created_at, order: :desc}, {property: :created_at, order: :desc}]}`
 
 If there is no column named after the property value, sorting is skipped.
 
