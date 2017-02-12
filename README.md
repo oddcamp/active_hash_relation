@@ -1,36 +1,38 @@
 # ActiveHashRelation
 [ ![Codeship Status for kollegorna/active_hash_relation](https://app.codeship.com/projects/02f08850-cc66-0134-028f-5ad72e690a75/status?branch=master)](https://app.codeship.com/projects/200194)
 
+ActiveHashRelation is a complete substitute of ActiveRecord::Relation that allows you to run ActiveRecord queries using only regular Hash using a very powerful yet simple API. It was initially built to allow front-end teams to specify from the API exactly what they need withoug bugging the backend developers, eventually emerged into its own little gem.
+
 ## Introduction
 Simple gem that allows you to manipulate ActiveRecord::Relation using JSON. For instance:
 ```ruby
-apply_filters(resource, {name: 'RPK', id: [1,2,3,4,5,6,7,8,9], start_date: {leq: "2014-10-19"}, act_status: "ongoing"})
+apply_filters(User.all, {name: 'filippos', created_at: {leq: "2016-10-19"}, role: 'regular', email: {like: 'vasilakis'}})
 ```
-filter a resource based on it's associations:
+filter a resource based on it's associations using a NOT filter:
 ```ruby
-apply_filters(resource, {updated_at: { geq: "2014-11-2 14:25:04"}, unit: {id: 9})
+apply_filters(Microposts.all, {updated_at: { geq: "2014-11-2 14:25:04"}, user: {not: {email: vasilakisfil@gmail.com}})
 ```
-or even filter a resource based on it's associations' associations:
+or even filter a resource based on it's associations' associations using an OR filter:
 ```ruby
-apply_filters(resource, {updated_at: { geq: "2014-11-2 14:25:04"}, unit: {id: 9, areas: {or: [{id: 22}, {id: 21}]} }})
+apply_filters(Comments.all, {updated_at: { geq: "2014-11-2 14:25:04"}, user: {id: 9, units: {or: [{id: 22}, {id: 21}]} }})
 ```
-and the list could go on.. Basically your whole db is exposed\* there. It's perfect for filtering a collection of resources on APIs.
+and the list could go on.. Basically you can run anything ActiveRecord supports, except from groupping. It's perfect for filtering a collection of resources on APIs.
 
 It should be noted that `apply_filters` calls `ActiveHashRelation::FilterApplier` class
 underneath with the same params.
 
-_\*Actually nothing is exposed, but a user could retrieve resources based
-on unknown attributes (attributes not returned from the API) by brute forcing
-which might or might not be a security issue. If you don't like that check
-[whitelisting](#whitelisting)._
+You can also do [__aggregation queries__](#aggregation-queries), like `sum`, `avg`, `min` and `max` on any column.
 
-*New*! You can now do [__aggregation queries__](#aggregation-queries).
+_\*A user could retrieve resources based
+on unknown attributes (attributes not returned from the API) by brute forcing
+which might or might not be a security issue. If you don't like that check you can specify from the `params` exactly what is allowed and what is not allowed. For more information check: [whitelisting](#whitelisting)._
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'active_hash_relation', '~> 1.2.0
+    gem 'active_hash_relation', '~> 1.3.0
 
 And then execute:
 
@@ -61,7 +63,8 @@ class Api::V1::ResourceController < Api::V1::BaseController
 end
 ```
 
-If you **need to enable filtering on scopes**, you need to specify that explicitly from the initializer. For instance:
+If you **need to enable filtering on scopes**, you need to specify that explicitly from the initializer. Please run:
+`bundle exec rails g active_hash_relation:initialize` which will create an initializer with the following content:
 
 ```ruby
 ActiveHashRelation.configure do |config|
@@ -79,6 +82,7 @@ end
   #requires monkeyparched scopes, optional if you don't enable them
   ActiveHashRelation.initialize!
 ```
+If you are not using Rails, just add the code above in your equivelant initialize block.
 
 ## The API
 ### Columns
@@ -148,7 +152,7 @@ You can also order by multiple attributes:
 
 If there is no column named after the property value, sorting is skipped.
 
-#### Deprecated API (will be removed in version 3.0)
+#### Deprecated API (will be removed in version 2.0)
 You can apply sorting using the `property` and `order` attributes. For instance:
 * `{sort: {property: :created_at, order: :desc}}`
 
@@ -200,7 +204,7 @@ to have performance issues on tables with millions of rows.
 
 
 ### Scopes
-**Filtering on scopes is not enabled by default**.
+**Filtering on scopes is not enabled by default. You need to add the initializer mentioned in the beginning of the [How to use](#how-to-use) section.**.
 
 Scopes are supported via a tiny monkeypatch in the ActiveRecord's scope class method which holds the name of each scope.
 The monkey patch is as gentle as it can be: it aliases the method, adds some sugar and executes it.
