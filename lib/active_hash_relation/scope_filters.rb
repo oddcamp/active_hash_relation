@@ -9,7 +9,11 @@ module ActiveHashRelation::ScopeFilters
 
     model.scope_names.each do |scope|
       if params.include?(scope)
-        resource = resource.send(scope)
+        if params[scope].is_a? Array
+          resource = resource.send(scope, *params[scope])
+        else
+          resource = resource.send(scope)
+        end
       end
     end
 

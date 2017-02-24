@@ -1,0 +1,19 @@
+source 'https://rubygems.org'
+
+ruby "2.3.3"
+
+group :development, :test do
+  gem 'rails', '5.0.1'
+  gem 'pg', '~> 0.18'
+end
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.5'
+  gem 'database_cleaner'
+  gem 'factory_girl_rails'
+  gem 'pry-rails'
+  gem 'faker'
+  gem 'listen'
+end
+
+gem 'active_hash_relation', path: '../../'

@@ -9,38 +9,27 @@ module ActiveHashRelation
 
     attr_reader :configuration
 
-    def initialize(resource, params, include_associations: true, model: nil)
+    def initialize(resource, params, include_associations: false, model: nil, is_not: false)
       @configuration = Module.nesting.last.configuration
       @resource = resource
-      @params = HashWithIndifferentAccess.new(params)
+      if params.respond_to?(:to_unsafe_h)
+        @params = HashWithIndifferentAccess.new(params.to_unsafe_h)
+      else
+        @params = HashWithIndifferentAccess.new(params)
+      end
       @include_associations = include_associations
-      @model = model
+      @model = find_model(model)
+      is_not ? @is_not = true : @is_not = false
     end
 
-
     def apply_filters
-      unless @model
-        @model = model_class_name(@resource)
-        if @model.nil? || engine_name == @model.to_s
-          @model = model_class_name(@resource, true)
-        end
-      end
+      run_or_filters
+      run_not_filters
+
       table_name = @model.table_name
       @model.columns.each do |c|
         next if @params[c.name.to_s].nil?
         next if @params[c.name.to_s].is_a?(String) && @params[c.name.to_s].blank?
-
-        if c.respond_to?(:primary)
-          if c.primary
-            @resource = filter_primary(@resource, c.name, @params[c.name])
-            next
-          end
-        else #rails 4.2
-          if @model.primary_key == c.name
-            @resource = filter_primary(@resource, c.name, @params[c.name])
-            next
-          end
-        end
 
         case c.type
         when :integer
@@ -56,12 +45,17 @@ module ActiveHashRelation
         when :datetime, :timestamp
           @resource = filter_datetime(@resource, c.name, table_name, @params[c.name])
         when :boolean
-          @resource = filter_boolean(@resource, c.name, @params[c.name])
+          @resource = filter_boolean(@resource, c.name, table_name, @params[c.name])
         end
       end
 
-
-      @resource = filter_scopes(@resource, @params[:scopes], @model) if @params.include?(:scopes)
+      if @params.include?(:scopes)
+        if ActiveHashRelation.configuration.filter_active_record_scopes
+          @resource = filter_scopes(@resource, @params[:scopes], @model)
+        else
+          Rails.logger.warn('Ignoring ActiveRecord scope filters because they are not enabled')
+        end
+      end
       @resource = filter_associations(@resource, @params, @model) if @include_associations
       @resource = apply_limit(@resource, @params[:limit]) if @params.include?(:limit)
       @resource = apply_sort(@resource, @params[:sort], @model) if @params.include?(:sort)
@@ -71,6 +65,36 @@ module ActiveHashRelation
 
     def filter_class(resource_name)
       "#{configuration.filter_class_prefix}#{resource_name.pluralize}#{configuration.filter_class_suffix}".constantize
+    end
+
+    def run_or_filters
+      if @params[:or].is_a?(Array)
+        if ActiveRecord::VERSION::MAJOR < 5
+          return Rails.logger.warn("OR query is supported on ActiveRecord 5+")
+        end
+
+        if @params[:or].length >= 2
+          array = @params[:or].map do |or_param|
+            self.class.new(@resource, or_param, include_associations: @include_associations).apply_filters
+          end
+
+          @resource = @resource.merge(array[0])
+          array[1..-1].each{|query| @resource = @resource.or(query)}
+        else
+          Rails.logger.warn("Can't run an OR with 1 element!")
+        end
+      end
+    end
+
+    def run_not_filters
+      if @params[:not].is_a?(Hash) && !@params[:not].blank?
+        @resource = self.class.new(
+          @resource,
+          @params[:not],
+          include_associations: @include_associations,
+          is_not: true
+        ).apply_filters
+      end
     end
   end
 end
