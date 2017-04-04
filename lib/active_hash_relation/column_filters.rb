@@ -53,8 +53,8 @@ module ActiveHashRelation::ColumnFilters
     end
   end
 
-  def filter_text(resource, column, param)
-    return filter_string(resource, column, param)
+  def filter_text(resource, column, table_name, param)
+    return filter_string(resource, column, table_name, param)
   end
 
   def filter_date(resource, column, table_name, param)
@@ -201,7 +201,7 @@ module ActiveHashRelation::ColumnFilters
   end
   
   def null_filters(resource, table_name, column, param)
-    if param[:null] == true
+    if param[:null] == true || param[:null] == 'true' || param[:null] == 1 || param[:null] == '1'
       if @is_not
         resource = resource.where.not("#{table_name}.#{column} IS NULL")
       else
@@ -209,7 +209,7 @@ module ActiveHashRelation::ColumnFilters
       end
     end
     
-    if param[:null] == false
+    if param[:null] == false || param[:null] == 'false' || param[:null] == 0 || param[:null] == '0'
       if @is_not
         resource = resource.where.not("#{table_name}.#{column} IS NOT NULL")
       else
