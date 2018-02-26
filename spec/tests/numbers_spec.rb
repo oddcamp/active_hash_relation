@@ -137,6 +137,17 @@ describe ActiveHashRelation do
 
         expect(strip(query)).to eq expected_query.to_s
       end
+
+      it 'rails string enum' do
+        hash = {status: 'published'}
+
+        query = HelperClass.new.apply_filters(Micropost.all, hash).to_sql
+        expected_query = q(
+          "SELECT microposts.* FROM microposts WHERE (microposts.status = #{Micropost.statuses[:published]})"
+        )
+
+        expect(strip(query)).to eq expected_query.to_s
+      end
     end
   end
 end

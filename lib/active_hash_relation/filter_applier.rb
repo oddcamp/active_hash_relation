@@ -33,6 +33,9 @@ module ActiveHashRelation
 
         case c.type
         when :integer
+          if @model.defined_enums[c.name] && @model.defined_enums[c.name][@params[c.name]]
+            @params[c.name] = @model.defined_enums[c.name][@params[c.name]]
+          end
           @resource = filter_integer(@resource, c.name, table_name, @params[c.name])
         when :float
           @resource = filter_float(@resource, c.name, table_name, @params[c.name])
