@@ -32,7 +32,7 @@ which might or might not be a security issue. If you don't like that check you c
 
 Add this line to your application's Gemfile:
 
-    gem 'active_hash_relation', '~> 1.4.0'
+    gem 'active_hash_relation', '~> 1.4.1'
 
 And then execute:
 
