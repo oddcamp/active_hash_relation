@@ -23,7 +23,7 @@ describe ActiveHashRelation do
           "SELECT microposts.* FROM microposts",
           "INNER JOIN users ON users.id = microposts.user_id",
           "WHERE (users.name = 'Filippos')",
-          "AND users.verified = 't'"
+          "AND users.verified = TRUE"
         )
 
         expect(strip(query)).to eq expected_query.to_s
@@ -56,7 +56,7 @@ describe ActiveHashRelation do
         expected_query = q(
           "SELECT microposts.* FROM microposts",
           "INNER JOIN users ON users.id = microposts.user_id",
-          "WHERE users.verified = 'f'"
+          "WHERE users.verified = FALSE"
         )
 
         expect(strip(query)).to eq expected_query.to_s

@@ -1,4 +1,4 @@
-class BasicSchema < ActiveRecord::Migration
+class BasicSchema < ActiveRecord::Migration[5.2]
   def change
     create_table "microposts", force: :cascade do |t|
       t.text     "content", null: false

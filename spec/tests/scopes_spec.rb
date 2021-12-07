@@ -22,7 +22,7 @@ describe ActiveHashRelation do
         query = HelperClass.new.apply_filters(User.all, hash).to_sql
         expected_query = q(
           "SELECT users.* FROM users",
-          "WHERE users.verified = 'f'",
+          "WHERE users.verified = FALSE",
           "AND users.followings_count = 0",
           "AND users.followers_count = 0"
         )
