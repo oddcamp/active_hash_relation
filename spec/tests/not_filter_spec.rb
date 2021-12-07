@@ -7,7 +7,7 @@ describe ActiveHashRelation do
 
       query = HelperClass.new.apply_filters(User.all, hash).to_sql
       expected_query = q(
-        "SELECT users.* FROM users WHERE (NOT (users.name = 'Filippos'))"
+        "SELECT users.* FROM users WHERE NOT users.name = 'Filippos'"
       )
 
       expect(strip(query)).to eq expected_query.to_s
@@ -19,9 +19,9 @@ describe ActiveHashRelation do
       query = HelperClass.new.apply_filters(User.all, hash).to_sql
       expected_query = q(
         "SELECT users.* FROM users WHERE",
-        "(NOT (users.name = 'Filippos'))",
+        "NOT (users.name = 'Filippos'))",
         "AND",
-        "(NOT (users.email = 'vasilakisfil@gmail.com'))"
+        "NOT (users.email = 'vasilakisfil@gmail.com'))"
       )
 
       expect(strip(query)).to eq expected_query.to_s
@@ -36,9 +36,9 @@ describe ActiveHashRelation do
           "SELECT users.* FROM users",
           "WHERE",
           "(",
-            "(NOT (users.name = 'Filippos')) AND (NOT (users.token = '123'))",
+            "NOT (users.name = 'Filippos') AND NOT (users.token = '123')",
             "OR",
-            "(NOT (users.name = 'Vasilis'))",
+            "NOT (users.name = 'Vasilis')",
           ")"
         )
 
@@ -53,9 +53,9 @@ describe ActiveHashRelation do
       expected_query = q(
         "SELECT users.* FROM users",
         "WHERE",
-        "(NOT (users.name = 'Filippos'))",
+        "NOT (users.name = 'Filippos')",
         "AND",
-        "(NOT (users.email LIKE '%@gmail.com'))",
+        "NOT (users.email LIKE '%@gmail.com')",
       )
 
       expect(strip(query)).to eq expected_query.to_s
@@ -67,7 +67,7 @@ describe ActiveHashRelation do
 
         query = HelperClass.new.apply_filters(User.all, hash).to_sql
         expected_query = q(
-          "SELECT users.* FROM users WHERE (NOT (users.name IS NULL))"
+          "SELECT users.* FROM users WHERE NOT (users.name IS NULL)"
         )
 
         expect(strip(query)).to eq expected_query.to_s
@@ -78,7 +78,7 @@ describe ActiveHashRelation do
 
         query = HelperClass.new.apply_filters(User.all, hash).to_sql
         expected_query = q(
-          "SELECT users.* FROM users WHERE (NOT (users.name IS NOT NULL))"
+          "SELECT users.* FROM users WHERE NOT (users.name IS NOT NULL)"
         )
 
         expect(strip(query)).to eq expected_query.to_s
@@ -93,9 +93,9 @@ describe ActiveHashRelation do
           "SELECT users.* FROM users",
           "INNER JOIN microposts ON microposts.user_id = users.id",
           "WHERE",
-          "(NOT (microposts.id = 1))",
+          "NOT (microposts.id = 1)",
           "AND",
-          "(NOT (microposts.content = 'Sveavägen 4'))"
+          "NOT (microposts.content = 'Sveavägen 4')"
         )
 
         expect(strip(query)).to eq expected_query.to_s

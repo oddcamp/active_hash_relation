@@ -8,7 +8,7 @@ describe ActiveHashRelation do
       query = HelperClass.new.apply_filters(User.all, hash).to_sql
       expected_query = q(
         "SELECT users.* FROM users",
-        "WHERE users.admin = 'f'"
+        "WHERE users.admin = FALSE"
       )
 
       expect(strip(query)).to eq expected_query.to_s
@@ -20,7 +20,7 @@ describe ActiveHashRelation do
       query = HelperClass.new.apply_filters(User.all, hash).to_sql
       expected_query = q(
         "SELECT users.* FROM users",
-        "WHERE users.admin = 'f' AND users.verified = 't'"
+        "WHERE users.admin = FALSE AND users.verified = TRUE"
       )
 
       expect(strip(query)).to eq expected_query.to_s

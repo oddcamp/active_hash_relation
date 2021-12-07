@@ -38,7 +38,7 @@ describe ActiveHashRelation do
         query = HelperClass.new.apply_filters(User.all, hash).to_sql
         expected_query = q(
           "SELECT users.* FROM users",
-          "WHERE (date(created_at) = '1988-12-12')",
+          "WHERE date(created_at) = '1988-12-12'",
         )
 
         expect(strip(query)).to eq expected_query.to_s
