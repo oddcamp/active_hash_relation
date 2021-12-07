@@ -6,11 +6,11 @@ require 'active_hash_relation/version'
 Gem::Specification.new do |spec|
   spec.name          = "active_hash_relation"
   spec.version       = ActiveHashRelation::VERSION
-  spec.authors       = ["Filippos Vasilakis", "Kollegorna"]
-  spec.email         = ["vasilakisfil@gmail.com", "admin@kollegorna.se"]
+  spec.authors       = ["Filippos Vasilakis", "Odd Camp"]
+  spec.email         = ["vasilakisfil@gmail.com", "hello@oddcamp.com"]
   spec.summary       = %q{Simple gem that allows you to run multiple ActiveRecord::Relation using hash. Perfect for APIs.}
   spec.description   = spec.summary
-  spec.homepage      = "https://github.com/kollegorna/active_hash_relation"
+  spec.homepage      = "https://github.com/oddcamp/active_hash_relation"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
