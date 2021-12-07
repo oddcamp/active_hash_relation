@@ -38,7 +38,7 @@ describe ActiveHashRelation do
           "SELECT users.* FROM users",
           "INNER JOIN microposts ON microposts.user_id = users.id",
           "WHERE (microposts.content LIKE '%4')",
-          "AND (microposts.created_at <= '2017-01-15 16:11:06')"
+          "AND (microposts.created_at <= '2017-01-15 16:11:06 UTC')"
         )
 
         expect(strip(query)).to eq expected_query.to_s

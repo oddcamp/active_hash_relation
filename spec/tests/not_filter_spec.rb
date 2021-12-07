@@ -19,9 +19,9 @@ describe ActiveHashRelation do
       query = HelperClass.new.apply_filters(User.all, hash).to_sql
       expected_query = q(
         "SELECT users.* FROM users WHERE",
-        "NOT (users.name = 'Filippos'))",
+        "NOT (users.name = 'Filippos')",
         "AND",
-        "NOT (users.email = 'vasilakisfil@gmail.com'))"
+        "NOT (users.email = 'vasilakisfil@gmail.com')"
       )
 
       expect(strip(query)).to eq expected_query.to_s
