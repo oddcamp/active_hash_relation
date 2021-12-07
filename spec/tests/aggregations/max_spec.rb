@@ -4,7 +4,7 @@ describe ActiveHashRelation do
   context 'aggregations' do
     context 'max' do
       before do
-        FactoryGirl.create_list(:micropost, 10)
+        FactoryBot.create_list(:micropost, 10)
       end
 
       it "one aggregation" do
