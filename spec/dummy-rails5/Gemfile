@@ -10,7 +10,7 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'database_cleaner'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'pry-rails'
   gem 'faker'
   gem 'listen'
