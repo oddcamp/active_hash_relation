@@ -7,10 +7,12 @@ module ActiveHashRelation::AssociationFilters
       end
     end
 
-    model.reflect_on_all_associations.map(&:name).each do |association|
+    model.reflect_on_all_associations.each do |assoc|
+      association = assoc.name
+      
       if params[association]
         association_name = association.to_s.titleize.split.join
-        association_class = association.class_name.constantize
+        association_class = assoc.class_name.constantize
 
         if self.configuration.has_filter_classes
           if self.configuration.use_unscoped
