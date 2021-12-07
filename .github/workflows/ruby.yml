@@ -40,7 +40,7 @@ jobs:
             ${{ runner.os }}-gems-${{ hashFiles('.tool-versions') }}-
       - name: Install dependencies and run Rails 5 tests
         run: |
-          cd ../dummy-rails5
+          cd dummy-rails5
           gem install bundler
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
