@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :address do
     user
 
@@ -8,7 +8,7 @@ FactoryGirl.define do
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :micropost do
     content { Faker::Lorem.sentence }
     likes { rand(1..1000) }
@@ -20,14 +20,14 @@ FactoryGirl.define do
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :relationship do
     association :follower, factory: :user
     association :followed, factory: :user
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
     name { Faker::Name.name }
